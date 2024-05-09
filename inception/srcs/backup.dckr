@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  nginx:
+    build: requirements/nginx/.
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./web:/var/www/html
+  wordpress:
+      build: requirements/wordpress/.
+      container_name: wp-php
+      volumes:
+        - ./web:/var/www/html
+

@@ -1,0 +1,23 @@
+FROM	debian:buster
+
+#install all the program
+RUN		apt-get update
+RUN		apt-get install -y nginx \
+                openssl
+#SSL certif
+RUN mkdir /etc/nginx/ssl
+RUN openssl req -new -newkey rsa:2048 -nodes -keyout /etc/nginx/ssl/yait-oul.key \
+    -out /etc/nginx/ssl/yait-oul.csr \
+    -subj "/C=MR/ST=Tetouan/L=Tetouan/O=1337, Inc./OU=yait-oul/CN=yait-oul"
+RUN openssl x509 -req -days 365 -in /etc/nginx/ssl/yait-oul.csr -signkey /etc/nginx/ssl/yait-oul.key -out /etc/nginx/ssl/yait-oul.crt
+
+COPY ./conf/nginx.conf /etc/nginx/conf.d
+
+# nginx config
+RUN mkdir -p /run/nginx
+
+#the only port allowed
+EXPOSE	443
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
